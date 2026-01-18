@@ -2,6 +2,7 @@ import turtle
 import tkinter as tk
 
 
+
 def expand_lsystem(axiom, rules, iterations):
     #expanding the string
     current_string = axiom
@@ -23,7 +24,6 @@ def expand_lsystem(axiom, rules, iterations):
 
 def drawlsystem(t, instruction, angle, step):
     stack = []
-
     for char in instruction:
         if char == "F":
             t.forward(step)
@@ -38,13 +38,19 @@ def drawlsystem(t, instruction, angle, step):
             position = t.position()
             heading = t.heading()
             stack.append((position, heading))
+            depth = len(stack)
+            green=min(1,0.2+depth*0.2)
+            t.pencolor(0.3, green, 0)
 
         elif char == "]":
             position, heading = stack.pop()
             t.penup()
-            t.setposition(position)
+            t.goto(position)
             t.setheading(heading)
             t.pendown()
+            depth = len(stack)
+            green = min(1, 0.2 + depth * 0.2)
+            t.pencolor(0.3, green, 0)
 
 
 def parse_rules(rules_text):
@@ -67,6 +73,7 @@ if __name__ == "__main__":
 
     t = turtle.RawTurtle(canvas)
     t.speed(0)
+    turtle.colormode(1)
 
     # --- controls --
     control_frame = tk.Frame(root)
@@ -94,15 +101,19 @@ if __name__ == "__main__":
 
     def generate():
         t.clear()
+        t.penup()
         t.home()
-
+        t.goto(-canvas.winfo_width() // 2 + 20, 0)
+        t.setheading(0)
+        t.pendown()
         axiom = axiom_entry.get()
         rules_text = rules_entry.get()
         angle = int(angle_entry.get())
         iterations = int(iterations_entry.get())
-        step = 10 - iterations
-        if step < 2:
-            step = 2
+
+        step = 18 - iterations*2
+        if step < 4:
+            step = 4
 
         rules = parse_rules(rules_text)
         instructions = expand_lsystem(axiom, rules, iterations)
