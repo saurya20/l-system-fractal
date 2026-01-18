@@ -23,6 +23,7 @@ def expand_lsystem(axiom, rules, iterations):
 
 
 def drawlsystem(t, instruction, angle, step):
+    #stack
     stack = []
     for char in instruction:
         if char == "F":
@@ -42,7 +43,7 @@ def drawlsystem(t, instruction, angle, step):
             green=min(1,0.2+depth*0.2)
             t.pencolor(0.3, green, 0)
 
-        elif char == "]":
+        elif char == "]" and stack:
             position, heading = stack.pop()
             t.penup()
             t.goto(position)
